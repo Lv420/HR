@@ -1,9 +1,10 @@
 // 导入接口
-import { loginapi } from '@/api/user'
+import { loginapi, userinfoapi, sysuser } from '@/api/user'
 // 导入操作token的方法
 import { getToken, setToken, removeToken } from '@/utils/auth'
 const state = {
-  token: getToken()
+  token: getToken(),
+  userInfo: ''
 }
 const mutations = {
   setToken (state, value) {
@@ -12,15 +13,26 @@ const mutations = {
   removeToken (state) {
     state.token = null
     removeToken()
+  },
+  setUserInfo (state, value) {
+    state.userInfo = value
   }
 }
 const actions = {
   // 登录接口获取token保存到vuex和cookies
-  async getUserToken (sdate, form) {
+  async getUserToken (state, form) {
     const res = await loginapi(form)
-    sdate.commit('setToken', res.data)
-    // console.log(res.data)
+
+    state.commit('setToken', res.data)
     setToken(res.data)
+    // console.log(res.data)
+  },
+  async getUserInfo (state) {
+    const res = await userinfoapi()
+    const restwo = await sysuser(res.data.userId)
+    state.commit('setUserInfo', { ...res, ...restwo })
+    // console.log(restwo)
+    // console.log(res)
   }
 }
 

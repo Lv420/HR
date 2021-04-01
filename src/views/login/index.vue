@@ -33,7 +33,7 @@ export default {
   data () {
     return {
       form: {
-        mobile: '13600000002',
+        mobile: '13800000002',
         password: '123456'
       },
       rules: {
@@ -61,7 +61,13 @@ export default {
       this.$refs.form.validate(async rus => {
         if (rus) {
           await this.getUserToken(this.form)
-          this.$router.push('/dashboard')
+          const redirect = this.$route.query.redirect
+          if (redirect) {
+            this.$router.push(redirect)
+          } else {
+            this.$router.push('/dashboard')
+          }
+
           this.$message.success('登录成功')
         } else {
           this.$message.error('验证失败')

@@ -1,40 +1,27 @@
 <template>
   <div class="navbar">
-    <hamburger
-      :is-active="sidebar.opened"
-      class="hamburger-container"
-      @toggleClick="toggleSideBar"
-    />
-
-    <breadcrumb class="breadcrumb-container" />
-
-    <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
-          <i class="el-icon-caret-bottom" />
-        </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              Home
-            </el-dropdown-item>
-          </router-link>
-          <a
-            target="_blank"
-            href="https://github.com/PanJiaChen/vue-admin-template/"
-          >
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a
-            target="_blank"
-            href="https://panjiachen.github.io/vue-element-admin-site/#/"
-          >
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
-          </el-dropdown-item>
+    <div class="left">
+      <i
+        class="iconsize"
+        :class="sidebar.opened ? 'el-icon-s-fold' : 'el-icon-s-unfold'"
+        @click="cutmenu"
+      ></i>
+      <!-- <i class="el-icon-s-fold"></i> -->
+      <div>HR人力资源后台管理系统</div>
+      <span>体验版</span>
+    </div>
+    <div class="right">
+      <el-dropdown>
+        <span class="el-dropdown-link">
+          <img
+            v-imgerror="imgsrc"
+            :src="userInfo.data.staffPhoto"
+            alt=""
+          /><span>{{ userInfo.data.username }}</span
+          ><i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -42,25 +29,32 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-
+import { mapState, mapGetters } from 'vuex'
 export default {
-  components: {
-    Breadcrumb,
-    Hamburger
+  data () {
+    return {
+      imgsrc: require('@/assets/common/1.png')
+    }
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar'])
+    // 控制菜单栏收起展开图标切换
+    ...mapState('app', ['sidebar']),
+    // 获取个人信息
+    ...mapGetters(['userInfo'])
   },
+  // directives: {
+  //   imgerror: {
+  //     inserted (el, obj) {
+  //       el.onerror = function () {
+  //         console.log(obj)
+  //         el.src = obj.value
+  //       }
+  //     }
+  //   }
+  // },
   methods: {
-    toggleSideBar () {
+    cutmenu () {
       this.$store.dispatch('app/toggleSideBar')
-    },
-    async logout () {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
 }
@@ -68,78 +62,41 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #5585fd;
   height: 50px;
-  overflow: hidden;
-  position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-
-  .hamburger-container {
-    line-height: 46px;
-    height: 100%;
-    float: left;
-    cursor: pointer;
-    transition: background 0.3s;
-    -webkit-tap-highlight-color: transparent;
-
-    &:hover {
-      background: rgba(0, 0, 0, 0.025);
+  .left {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    span {
+      margin-left: 15px;
+      background-color: #ccc;
+      padding: 5px;
+      border-radius: 5px;
+      color: #5585fd;
+    }
+    .iconsize {
+      font-size: 25px;
+      margin: 0 25px 0 15px;
     }
   }
-
-  .breadcrumb-container {
-    float: left;
-  }
-
-  .right-menu {
-    float: right;
-    height: 100%;
-    line-height: 50px;
-
-    &:focus {
-      outline: none;
+  .right {
+    margin-right: 15px;
+    .el-dropdown-link {
+      color: #fff;
+      display: flex;
+      align-items: center;
     }
-
-    .right-menu-item {
-      display: inline-block;
-      padding: 0 8px;
-      height: 100%;
-      font-size: 18px;
-      color: #5a5e66;
-      vertical-align: text-bottom;
-
-      &.hover-effect {
-        cursor: pointer;
-        transition: background 0.3s;
-
-        &:hover {
-          background: rgba(0, 0, 0, 0.025);
-        }
-      }
+    span {
+      margin: 0 10px;
     }
-
-    .avatar-container {
-      margin-right: 30px;
-
-      .avatar-wrapper {
-        margin-top: 5px;
-        position: relative;
-
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
-
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
-        }
-      }
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
     }
   }
 }

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import { getToken } from '@/utils/auth'
 
 const instens = axios.create({
   baseURL: process.env.VUE_APP_BASE_API
@@ -9,6 +10,13 @@ const instens = axios.create({
 instens.interceptors.request.use(
   function (config) {
     // 在发送请求之前做些什么
+    const token = getToken()
+    // console.log(token)
+    if (token) {
+      config.headers.Authorization = `Bearer ${getToken()}`
+      // console.log(config)
+    }
+
     return config
   },
   function (error) {
@@ -22,7 +30,7 @@ instens.interceptors.response.use(
   function (res) {
     // 对响应数据做点什么
     if (res.data.success) {
-      console.log(res.data)
+      // console.log(res.data)
       return res.data
     } else {
       Message.error(res.data.message)
