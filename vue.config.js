@@ -7,7 +7,7 @@ function resolve (dir) {
 }
 
 const name = defaultSettings.title || 'vue Admin Template'
-const port = 5566 // dev port
+const port = 8080 // dev port
 module.exports = {
   publicPath: '/',
   outputDir: 'dist',
@@ -22,11 +22,8 @@ module.exports = {
       errors: true
     },
     proxy: {
-      '/dev-api': {
-        target: 'http://localhost:3000',
-        pathRewrite: {
-          '^/dev-api': ''
-        }
+      '/api': {
+        target: 'http://localhost:3000'
       }
     }
   },

@@ -1,7 +1,11 @@
-// import request from '@/utils/request'
+import http from '@/utils/request.js'
 
-export function login () {}
-
-export function getInfo () {}
-
-export function logout () {}
+// 登录接口
+export function loginapi (data) {
+  return http({
+    method: 'post',
+    url: '/sys/login',
+    Catch: true,
+    data
+  })
+}
