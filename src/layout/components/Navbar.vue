@@ -11,7 +11,7 @@
       <span>体验版</span>
     </div>
     <div class="right">
-      <el-dropdown>
+      <el-dropdown @command="handleCommand">
         <span class="el-dropdown-link">
           <img
             v-imgerror="imgsrc"
@@ -21,7 +21,7 @@
           ><i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item command="exit">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -55,6 +55,14 @@ export default {
   methods: {
     cutmenu () {
       this.$store.dispatch('app/toggleSideBar')
+    },
+    // 退出登录
+    handleCommand (command) {
+      if (command === 'exit') {
+        this.$store.dispatch('user/loginout')
+        this.$message.success('退出成功')
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      }
     }
   }
 }

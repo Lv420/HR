@@ -16,6 +16,9 @@ const mutations = {
   },
   setUserInfo (state, value) {
     state.userInfo = value
+  },
+  removeUserInfo (state) {
+    state.userInfo = ''
   }
 }
 const actions = {
@@ -30,9 +33,13 @@ const actions = {
   async getUserInfo (state) {
     const res = await userinfoapi()
     const restwo = await sysuser(res.data.userId)
-    state.commit('setUserInfo', { ...res, ...restwo })
+    state.commit('setUserInfo', { ...res.data, ...restwo })
     // console.log(restwo)
     // console.log(res)
+  },
+  loginout (state) {
+    state.commit('removeToken')
+    state.commit('removeUserInfo')
   }
 }
 

@@ -6,7 +6,20 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
+import departments from './modules/departments'
+import employees from './modules/employees'
+import setting from './modules/setting'
+import salarys from './modules/salarys'
+import social from './modules/social'
+import attendances from './modules/attendances'
+import approvals from './modules/approvals'
+import permission from './modules/permission'
+
 export const constantRoutes = [
+  {
+    path: '/',
+    redirect: '/login'
+  },
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -20,15 +33,14 @@ export const constantRoutes = [
   },
 
   {
-    path: '/',
+    path: '/dashboard',
     component: Layout,
-    redirect: '/dashboard',
     children: [
       {
         path: 'dashboard',
         name: 'Dashboard',
         component: () => import('@/views/dashboard/index'),
-        meta: { title: 'Dashboard', icon: 'dashboard' }
+        meta: { title: '首页', icon: 'dashboard' }
       }
     ]
   },
@@ -38,20 +50,28 @@ export const constantRoutes = [
     hidden: true
   },
 
-  // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
+]
+
+const needControlRoutes = [
+  departments,
+  employees,
+  setting,
+  salarys,
+  social,
+  attendances,
+  approvals,
+  permission
 ]
 
 const createRouter = () =>
   new Router({
-    // mode: 'history', // require service support
     scrollBehavior: () => ({ y: 0 }),
-    routes: constantRoutes
+    routes: [...constantRoutes, ...needControlRoutes]
   })
 
 const router = createRouter()
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter () {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router

@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth'
+import store from '@/store/index'
+import router from '@/router/index'
 
 const instens = axios.create({
   baseURL: process.env.VUE_APP_BASE_API
@@ -38,6 +40,12 @@ instens.interceptors.response.use(
     }
   },
   function (error) {
+    console.log([error])
+    if (error.response.data && error.response.data.code === 10002) {
+      store.dispatch('user/loginout')
+      Message.error(error.response.data.message)
+      router.push(`/login?redirect=${window.location.href.split('#')[1]}`)
+    }
     // 对响应错误做点什么
     return Promise.reject(error)
   }

@@ -4,7 +4,7 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 
 import '@/styles/index.scss' // global css
 
@@ -16,14 +16,18 @@ import '@/icons' // icon
 import '@/permission' // permission control
 
 import directives from '@/directives/index'
+// 导入全局公用组件
+import componentsJs from '@/components/index'
 
 Object.keys(directives).forEach(item => {
   Vue.directive(item, directives[item])
 })
 
 Vue.use(ElementUI, { locale })
+Vue.use(componentsJs)
 
 Vue.config.productionTip = false
+Vue.prototype.$bus = new Vue()
 
 new Vue({
   el: '#app',
