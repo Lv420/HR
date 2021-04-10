@@ -35,6 +35,7 @@ export function sysRoleput (data) {
   })
 }
 
+// 删除角色
 export function sysroledel (id) {
   return http({
     method: 'delete',

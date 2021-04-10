@@ -120,7 +120,7 @@ export function param2Obj (url) {
 
 export function treeChange (arr, str) {
   return arr.filter(item => {
-    console.log(item)
+    // console.log(item)
     if (item.pid === str) {
       item.children = treeChange(arr, item.id)
       return true

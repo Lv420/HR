@@ -18,9 +18,14 @@ import '@/permission' // permission control
 import directives from '@/directives/index'
 // 导入全局公用组件
 import componentsJs from '@/components/index'
+// 导入全局过滤器
+import filtersUtils from '@/filters'
 
 Object.keys(directives).forEach(item => {
   Vue.directive(item, directives[item])
+})
+Object.keys(filtersUtils).forEach(item => {
+  Vue.filter(item, filtersUtils[item])
 })
 
 Vue.use(ElementUI, { locale })

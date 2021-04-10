@@ -18,7 +18,7 @@ const actions = {
   // 获取数据源
   async gettreeDepts (state) {
     const res = await companyDepartment()
-    console.log(res)
+    // console.log(res)
     state.commit('settreeDepts', res.data.depts)
     let _depts = res.data.depts
 

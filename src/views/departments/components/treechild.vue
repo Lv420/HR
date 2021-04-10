@@ -48,14 +48,14 @@ export default {
     // 下拉操作
     command (value) {
       if (value === 'add') {
-        console.log('这是新增')
+        // console.log('这是新增')
         this.$bus.$emit('isShowEvent', [this.nodeData, 'add'])
       } else if (value === 'edit') {
-        console.log('这是修改')
+        // console.log('这是修改')
 
         this.$bus.$emit('isMode', [this.nodeData, 'edit'])
       } else {
-        console.log('这是删除')
+        // console.log('这是删除')
         this.$confirm('请确认删除', '温馨提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
