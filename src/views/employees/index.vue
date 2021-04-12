@@ -28,6 +28,17 @@
         </el-table-column>
         <el-table-column prop="username" label="姓名" sortable>
         </el-table-column>
+        <el-table-column label="头像" prop="staffPhoto">
+          <template v-slot="{ row }">
+            <img
+              @click="clickcode(row.staffPhoto)"
+              v-imgerror="errorimg"
+              class="imgstyle"
+              :src="row.staffPhoto"
+              alt=""
+            />
+          </template>
+        </el-table-column>
         <el-table-column prop="mobile" label="手机号" sortable>
         </el-table-column>
         <el-table-column prop="workNumber" label="工号" sortable>
@@ -44,7 +55,7 @@
         <el-table-column prop="formOfEmployment" label="聘用形式" sortable>
           <template v-slot="{ row }">
             <div>
-              {{ row.formOfEmployment | formatterOf }}
+              {{ +row.formOfEmployment | formatterOf }}
             </div>
           </template>
         </el-table-column>
@@ -72,7 +83,7 @@
             <el-button type="text">转正</el-button>
             <el-button type="text">调岗</el-button>
             <el-button type="text">离职</el-button>
-            <el-button type="text">角色</el-button>
+            <el-button type="text" @click="cosbtn(scope.row)">角色</el-button>
             <el-button type="text" @click="delbtn(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -90,19 +101,47 @@
       </el-pagination>
     </el-card>
     <add ref="add"></add>
+    <el-dialog class="canvas" title="生成二维码" :visible.sync="qrcodeShow">
+      <canvas ref="code"></canvas>
+    </el-dialog>
+    <el-dialog title="角色分配" :visible.sync="cosShow" @close="closeEevent">
+      <el-checkbox
+        v-model="roleList"
+        v-for="item in list"
+        :key="item.id"
+        :label="item.id"
+        >{{ item.name }}</el-checkbox
+      >
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cosShow = false">取 消</el-button>
+        <el-button type="primary" @click="userSave">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import QrCode from 'qrcode'
 // 导入api
-import { sysuserget, sysuserdel } from '@/api/employees'
+import {
+  sysuserget,
+  sysuserdel,
+  sysUserget,
+  sysUserAssignRolesput
+} from '@/api/employees'
+import { sysRoleget } from '@/api/setting'
 // import employees from '@/api/constant/employees'
 import add from './components/add'
 export default {
   data () {
     return {
       tableData: [],
-
+      errorimg: require('@/assets/1.png'),
+      qrcodeShow: false, // 二维码弹窗
+      cosShow: false, // 角色分配弹窗
+      list: [], // 角色数据
+      roleList: [], // 已拥有的角色数据
+      id: '',
       page: {
         page: 1,
         size: 10,
@@ -134,6 +173,48 @@ export default {
     // }
   },
   methods: {
+    // 关闭角色窗口的回调
+    closeEevent () {
+      this.cosShow = false
+      this.roleList = []
+    },
+    // 点击分配员工角色
+    async userSave () {
+      await sysUserAssignRolesput({
+        id: this.id,
+        roleIds: this.roleList
+      })
+      // console.log(res)
+      this.$message.success('角色分配成功')
+      this.closeEevent()
+      // this.cosShow = false
+    },
+    // 点击打开角色分配弹框
+    async cosbtn (row) {
+      this.cosShow = true
+      this.id = row.id
+      const res = await sysRoleget()
+      this.list = res.data.rows
+      // console.log(res)
+      const res1 = await sysUserget(row.id)
+      console.log(res1)
+      this.roleList = res1.data.roleIds
+    },
+    // 点击头像获取验证码
+    clickcode (row) {
+      console.log(row)
+      if (row) {
+        this.qrcodeShow = true
+        this.$nextTick(() => {
+          QrCode.toCanvas(this.$refs.code, row, {
+            width: 200,
+            height: 200
+          })
+        })
+      } else {
+        this.$message.error('抱歉,头像不存在')
+      }
+    },
     // 点击查看
     lookbtn (row) {
       console.log(row)
@@ -199,6 +280,9 @@ export default {
 <style lang="scss" scoped>
 .employees {
   padding: 15px;
+  .canvas {
+    text-align: center;
+  }
   .iconcss {
     margin-right: 5px;
     color: #409eff;
@@ -209,6 +293,10 @@ export default {
   }
   .centent {
     margin-top: 15px;
+    .imgstyle {
+      width: 50px;
+      height: 50px;
+    }
   }
   .textcenter {
     text-align: center;

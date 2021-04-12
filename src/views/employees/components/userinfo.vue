@@ -60,13 +60,14 @@
             <el-col :span="12">
               <el-form-item label="员工头像">
                 <!-- 放置上传图片 -->
+                <uploadimg v-model="userInfo.staffPhoto"></uploadimg>
               </el-form-item>
             </el-col>
           </el-row>
           <!-- 保存个人信息 -->
           <el-row class="inline-info" type="flex" justify="center">
             <el-col :span="12">
-              <el-button type="primary">保存更新</el-button>
+              <el-button type="primary" @click="basicbtn">保存更新</el-button>
               <el-button>返回</el-button>
             </el-col>
           </el-row>
@@ -93,6 +94,7 @@
 
             <el-form-item label="员工照片">
               <!-- 放置上传图片 -->
+              <uploadimg v-model="formData.staffPhoto"></uploadimg>
             </el-form-item>
             <el-form-item label="国家/地区">
               <el-select v-model="formData.nationalArea" class="inputW2">
@@ -394,7 +396,7 @@
             <!-- 保存员工信息 -->
             <el-row class="inline-info" type="flex" justify="center">
               <el-col :span="12">
-                <el-button type="primary">保存更新</el-button>
+                <el-button type="primary" @click="infobtn">保存更新</el-button>
                 <el-button>返回</el-button>
               </el-col>
             </el-row>
@@ -407,14 +409,19 @@
 
 <script>
 import EmployeeEnum from '@/api/constant/employees'
-import { sysUserget, employeesget } from '@/api/employees'
+import {
+  sysUserget,
+  employeesget,
+  sysuserput,
+  employeesput
+} from '@/api/employees'
 
 export default {
   data () {
     return {
       userId: this.$route.params.id,
       EmployeeEnum, // 员工枚举数据
-      userInfo: {},
+      userInfo: {}, // 员工基本信息
       formData: {
         userId: '',
         username: '', // 用户名
@@ -485,14 +492,28 @@ export default {
     this.getformdata()
   },
   methods: {
+    // 保存个人信息
+    async infobtn () {
+      await employeesput({ ...this.formData, id: this.userId })
+      this.$message.success('个人信息更新成功')
+      this.$router.push('/employees')
+    },
+    // 保存头部基本信息
+    async basicbtn () {
+      await sysuserput({ ...this.userInfo, id: this.userId })
+      this.$message.success('基本信息更新成功')
+    },
     async getuserInfo () {
       const res = await sysUserget(this.userId)
       //   console.log(res)
       this.userInfo = res.data
+      console.log(this.userInfo)
+      // this.basicInfo = JSON.parse(JSON.stringify(res.data))
+      // console.log(this.basicInfo)
     },
     async getformdata () {
       const res = await employeesget(this.userId)
-      console.log(res)
+      // console.log(res)
       this.formData = res.data
     }
   }

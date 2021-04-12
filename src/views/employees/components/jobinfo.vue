@@ -203,7 +203,7 @@
       </div>
       <!-- 从业信息 -->
       <el-form-item>
-        <el-button type="primary">保存更新</el-button>
+        <el-button type="primary" @click="savejob">保存更新</el-button>
         <el-button>返回</el-button>
       </el-form-item>
     </el-form>
@@ -212,7 +212,7 @@
 
 <script>
 import EmployeeEnum from '@/api/constant/employees'
-
+import { employeesjobget, employeesjobput } from '@/api/employees'
 export default {
   data () {
     return {
@@ -247,6 +247,22 @@ export default {
         workingCity: '', // 工作城市
         workingTimeForTheFirstTime: '' // 首次参加工作时间
       }
+    }
+  },
+  created () {
+    this.getjobInfo()
+  },
+  methods: {
+    // 获取员工岗位信息
+    async getjobInfo () {
+      const res = await employeesjobget(this.userId)
+      console.log(res)
+      this.formData = res.data
+    },
+    async savejob () {
+      await employeesjobput({ ...this.formData, id: this.userId })
+      this.$message.success('岗位信息保存成功')
+      this.$router.push('/employees')
     }
   }
 }

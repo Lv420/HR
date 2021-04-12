@@ -59,3 +59,38 @@ export function employeesget (id) {
     url: `/employees/${id}/personalInfo`
   })
 }
+
+// 保存员工个人信息
+export function employeesput (data) {
+  return http({
+    method: 'put',
+    url: `/employees/${data.id}/personalInfo`,
+    data
+  })
+}
+
+// 获取员工岗位信息
+export function employeesjobget (id) {
+  return http({
+    method: 'get',
+    url: `/employees/${id}/jobs`
+  })
+}
+
+// 保存员工岗位信息
+export function employeesjobput (data) {
+  return http({
+    method: 'put',
+    url: `/employees/${data.id}/jobs`,
+    data
+  })
+}
+
+// 保存员工角色
+export function sysUserAssignRolesput (data) {
+  return http({
+    method: 'put',
+    url: '/sys/user/assignRoles',
+    data
+  })
+}
