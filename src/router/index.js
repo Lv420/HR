@@ -38,22 +38,17 @@ export const constantRoutes = [
     children: [
       {
         path: 'dashboard',
-        name: 'Dashboard',
+        name: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         meta: { title: '首页', icon: 'dashboard' }
       }
     ]
-  },
-  {
-    path: '/test',
-    // component: () => import('@/views/test'),
-    hidden: true
-  },
+  }
 
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
-const needControlRoutes = [
+export const needControlRoutes = [
   departments,
   employees,
   setting,
@@ -67,7 +62,7 @@ const needControlRoutes = [
 const createRouter = () =>
   new Router({
     scrollBehavior: () => ({ y: 0 }),
-    routes: [...constantRoutes, ...needControlRoutes]
+    routes: [...constantRoutes]
   })
 
 const router = createRouter()

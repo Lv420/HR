@@ -60,7 +60,6 @@ export default {
     handleCommand (command) {
       if (command === 'exit') {
         this.$store.dispatch('user/loginout')
-        this.$message.success('退出成功')
         this.$router.push(`/login?redirect=${this.$route.fullPath}`)
       }
     }

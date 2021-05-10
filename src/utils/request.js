@@ -40,7 +40,7 @@ instens.interceptors.response.use(
     }
   },
   function (error) {
-    console.log([error])
+    // console.log([error])
     if (error.response.data && error.response.data.code === 10002) {
       store.dispatch('user/loginout')
       Message.error(error.response.data.message)

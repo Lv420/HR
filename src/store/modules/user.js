@@ -2,6 +2,9 @@
 import { loginapi, userinfoapi, sysuser } from '@/api/user'
 // 导入操作token的方法
 import { getToken, setToken, removeToken } from '@/utils/auth'
+// import { resetRouter } from '@/router'
+import router from '@/router/index'
+// import Vue from 'vue'
 const state = {
   token: getToken(),
   userInfo: ''
@@ -40,6 +43,14 @@ const actions = {
   loginout (state) {
     state.commit('removeToken')
     state.commit('removeUserInfo')
+    // resetRouter()
+    // Vue.nextTick(() => {
+    router.go(0)
+    // })
+    // Vue.nextTick(() => {
+    //   resetRouter()
+    // })
+    // router.go(0)
   }
 }
 

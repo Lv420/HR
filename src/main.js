@@ -20,6 +20,8 @@ import directives from '@/directives/index'
 import componentsJs from '@/components/index'
 // 导入全局过滤器
 import filtersUtils from '@/filters'
+import mixins from '@/mixins'
+Vue.mixin(mixins)
 
 Object.keys(directives).forEach(item => {
   Vue.directive(item, directives[item])

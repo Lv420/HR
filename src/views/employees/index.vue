@@ -7,7 +7,12 @@
       </template>
       <template #right>
         <div>
-          <el-button type="success" @click="ExcelShow">导入</el-button>
+          <el-button
+            type="success"
+            v-if="filterbtn('importbtn')"
+            @click="ExcelShow"
+            >导入</el-button
+          >
           <el-button type="primary" @click="addbtn"
             ><span class="fontsize">+</span>新增员工</el-button
           >

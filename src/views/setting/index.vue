@@ -27,7 +27,9 @@
               ></el-table-column>
               <el-table-column label="操作">
                 <template v-slot="scope">
-                  <el-button type="success">分配权限</el-button>
+                  <el-button type="success" @click="allotbtn(scope.row.id)"
+                    >分配权限</el-button
+                  >
                   <el-button type="primary" @click="editbtn(scope)"
                     >编辑</el-button
                   >
@@ -73,11 +75,13 @@
       </el-tabs>
     </el-card>
     <add ref="add" :editID="editID" :mode="mode" @getsysRole="getsysRole"></add>
+    <allot ref="allot"></allot>
   </div>
 </template>
 
 <script>
 import add from './components/add'
+import allot from './components/allot'
 import { sysRoleget, companyget, sysroledel } from '@/api/setting'
 export default {
   data () {
@@ -96,25 +100,36 @@ export default {
     }
   },
   components: {
-    add
+    add,
+    allot
   },
   created () {
     // 获取角色列表
     this.getsysRole()
   },
   methods: {
+    // 点击分配权限
+    allotbtn (id) {
+      console.log(id)
+      this.$refs.allot.allotShow = true
+      this.$refs.allot.getallot(id)
+    },
     // 删除角色
     delbtn (row) {
       console.log(row)
       this.$confirm('将永久删除角色', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
-      }).then(async () => {
-        await sysroledel(row.id)
-        this.$message.success('删除成功')
-        this.page.currentPage = 1
-        this.getsysRole()
       })
+        .then(async () => {
+          await sysroledel(row.id)
+          this.$message.success('删除成功')
+          this.page.currentPage = 1
+          this.getsysRole()
+        })
+        .catch(() => {
+          this.$message.error('已取消删除')
+        })
     },
     // 打开编辑
     editbtn (scope) {
@@ -127,6 +142,7 @@ export default {
     // 打开新增窗口
     addbtn () {
       this.$refs.add.isShow = true
+      this.mode = 'add'
     },
     // teb栏
     handleClick (value) {
